@@ -142,3 +142,6 @@ web_modules
 
 #Postgres Data
 data/db
+
+# OS X Artifacts
+.DS_Store
