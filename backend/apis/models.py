@@ -7,5 +7,9 @@ class Incident(models.Model):
     description = models.TextField()
     location = models.TextField()
 
+    def __unicode__(self):
+        return self.caseNumber
+
     class Meta:
         ordering = ['created']
+        
