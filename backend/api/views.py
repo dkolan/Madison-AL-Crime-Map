@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from datetime import *
 
 @api_view(['GET'])
-def getData(request):
+def getIncident(request):
     incident = {
         'Datetime': datetime(2022, 12, 2, 7, 50, 22, 0),
         'Case Number': '22M005979',
