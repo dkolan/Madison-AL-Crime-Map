@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
     # Local
     'accounts.apps.AccountsConfig',
+    'apis.apps.ApisConfig',
     
+    # 3rd Party
     'corsheaders',
     'rest_framework'
 ]
