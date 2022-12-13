@@ -144,4 +144,8 @@ web_modules
 data/db
 
 # OS X Artifacts
+<<<<<<< HEAD
 .DS_Store
+=======
+.DS_Store
+>>>>>>> 4691ae9a071defd3eb8e29fa5155c1c14d15da7f
