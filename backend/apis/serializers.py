@@ -6,6 +6,7 @@ class IncidentSerializer(serializers.ModelSerializer):
         model = Incident
         fields = [
             'id',
+            'created',
             'datetime',
             'caseNumber',
             'description',
