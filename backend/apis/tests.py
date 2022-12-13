@@ -32,6 +32,11 @@ class IncidentTestCase(TestCase):
         self.assertTrue(isinstance(i, Incident))
         self.assertEqual(i.__unicode__(), i.caseNumber)
 
+    def test_return_caseNumber(self):
+        i = self.create_incident()
+        caseNumber = i.__unicode__()
+        self.assertEqual(caseNumber, i.caseNumber)
+
     # Views
     def test_incident_list_view(self):
         i = self.create_incident()
