@@ -10,7 +10,6 @@ class IncidentTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-
     def create_incident(
         self,
         created = datetime.now(),
@@ -42,11 +41,35 @@ class IncidentTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(i.caseNumber, response.content.decode("utf-8"))
 
-    def test_incident_view(self):
+    def test_create_read_incident_view(self):
         i = self.create_incident()
         url = reverse('incident', args=[i.id])
         response = self.client.get(url)
 
-        import pdb; pdb.set_trace()
         self.assertEqual(response.status_code, 200)
         self.assertIn(i.caseNumber, response.content.decode("utf-8"))
+
+    def test_create_update_incident_view(self):
+        i = self.create_incident()
+        url = reverse('incident', args=[i.id])
+        response = self.client.get(url)
+
+        updated_incident = {
+            'datetime': i.datetime,
+            'caseNumber': i.caseNumber,
+            'description': "An updated description",
+            'location': i.location
+        }
+
+        response = self.client.put(url, data=updated_incident)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(i.caseNumber, response.content.decode("utf-8"))
+        self.assertIn(updated_incident['description'], response.content.decode("utf-8"))
+
+    def test_delete_incident_view(self):
+        i = self.create_incident()
+        url = reverse('incident', args=[i.id])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
