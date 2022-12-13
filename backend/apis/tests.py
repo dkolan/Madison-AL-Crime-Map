@@ -26,19 +26,27 @@ class IncidentTestCase(TestCase):
             description = description,
             location = location
         )
-    
-    # Model
+
+    # Models
     def test_incident_creation(self):
         i = self.create_incident()
         self.assertTrue(isinstance(i, Incident))
         self.assertEqual(i.__unicode__(), i.caseNumber)
 
-    # View
+    # Views
     def test_incident_list_view(self):
         i = self.create_incident()
         url = reverse('incident_list')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn(i.caseNumber, response.content.decode("utf-8"))
+
+    def test_incident_view(self):
+        i = self.create_incident()
+        url = reverse('incident', args=[i.id])
+        response = self.client.get(url)
+
         import pdb; pdb.set_trace()
+        self.assertEqual(response.status_code, 200)
         self.assertIn(i.caseNumber, response.content.decode("utf-8"))
