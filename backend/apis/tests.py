@@ -1,10 +1,18 @@
+import csv
 from django.test import TestCase
+from django.test.client import Client
 from django.urls import reverse
+from django.contrib.admin.sites import AdminSite
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from .models import Incident
+from .admin import IncidentAdmin, CsvImportForm
 
 from rest_framework.test import APIClient
 
-from .models import Incident
 from datetime import datetime
+import os
 
 class IncidentTestCase(TestCase):
     def setUp(self):
@@ -78,3 +86,21 @@ class IncidentTestCase(TestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, 204)
+
+class CustomIncidentAdmin(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.incident = Incident.objects.create(
+            created = datetime.now(),
+            datetime = datetime(1937, 5, 6, 19, 25),
+            caseNumber = 'ABC123',
+            description = 'Gross Negligance and Hubris',
+            location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.'
+        )
+
+    def setUp(self):
+        self.site = AdminSite()
+
+    def test_IncidentAdmin_str(self):
+        incident_admin = IncidentAdmin(Incident, self.site)
+        self.assertEqual(str(incident_admin), 'apis.IncidentAdmin')

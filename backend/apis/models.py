@@ -1,6 +1,8 @@
 from django.db import models
+import uuid
 
 class Incident(models.Model):
+    id = models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
     datetime = models.DateTimeField()
     caseNumber = models.CharField(max_length = 15, blank=False, default='')
@@ -12,4 +14,5 @@ class Incident(models.Model):
 
     class Meta:
         ordering = ['created']
+        unique_together = ['datetime', 'caseNumber', 'description', 'location']
         
