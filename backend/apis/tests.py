@@ -18,6 +18,13 @@ class IncidentTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
 
+        User = get_user_model()
+        self.user = User.objects.create_superuser(
+            username='mpruss',
+            email='mpruss@dzr.de',
+            password='hunter2')
+        self.client.force_login(user=self.user)
+
     def create_incident(
         self,
         created = datetime.now(),
@@ -104,3 +111,6 @@ class CustomIncidentAdmin(TestCase):
     def test_IncidentAdmin_str(self):
         incident_admin = IncidentAdmin(Incident, self.site)
         self.assertEqual(str(incident_admin), 'apis.IncidentAdmin')
+
+class IncidentPermissions(TestCase):
+    pass
