@@ -31,14 +31,18 @@ class IncidentTestCase(TestCase):
         datetime = datetime(1937, 5, 6, 19, 25),
         caseNumber = 'ABC123',
         description = 'Gross Negligance and Hubris',
-        location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.'
+        location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.',
+        latitude = 39.977818000,
+        longitude = -74.331928700
     ):
         return Incident.objects.create(
             created = created,
             datetime = datetime,
             caseNumber = caseNumber,
             description = description,
-            location = location
+            location = location,
+            latitude = latitude,
+            longitude = longitude
         )
 
     # Models
@@ -78,7 +82,9 @@ class IncidentTestCase(TestCase):
             'datetime': i.datetime,
             'caseNumber': i.caseNumber,
             'description': "An updated description",
-            'location': i.location
+            'location': i.location,
+            'latitude': i.latitude,
+            'longitude': i.longitude
         }
 
         response = self.client.put(url, data=updated_incident)
@@ -102,7 +108,9 @@ class CustomIncidentAdmin(TestCase):
             datetime = datetime(1937, 5, 6, 19, 25),
             caseNumber = 'ABC123',
             description = 'Gross Negligance and Hubris',
-            location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.'
+            location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.',
+            latitude = 39.977818000,
+            longitude = -74.331928700
         )
 
     def setUp(self):
@@ -129,14 +137,18 @@ class IncidentPermissions(TestCase):
         datetime = datetime(1937, 5, 6, 19, 25),
         caseNumber = 'ABC123',
         description = 'Gross Negligance and Hubris',
-        location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.'
+        location = 'NAS Lakehurst, Manchester Township, New Jersey, U.S.',
+        latitude = 39.977818000,
+        longitude = -74.331928700
     ):
         return Incident.objects.create(
             created = created,
             datetime = datetime,
             caseNumber = caseNumber,
             description = description,
-            location = location
+            location = location,
+            latitude = latitude,
+            longitude = longitude
         )
 
     def test_incident_creation_user_403(self):
@@ -144,7 +156,9 @@ class IncidentPermissions(TestCase):
             'datetime': datetime.now(),
             'caseNumber': datetime(1937, 5, 6, 19, 25),
             'description': 'ABC123',
-            'location': 'NAS Lakehurst, Manchester Township, New Jersey, U.S.'
+            'location': 'NAS Lakehurst, Manchester Township, New Jersey, U.S.',
+            'latitude': 39.977818000,
+            'longitude': -74.331928700
         }
 
         url = reverse('incident_list')
@@ -178,7 +192,9 @@ class IncidentPermissions(TestCase):
             'datetime': i.datetime,
             'caseNumber': i.caseNumber,
             'description': "An updated description",
-            'location': i.location
+            'location': i.location,
+            'latitude': i.latitude,
+            'longitude': i.longitude
         }
 
         response = self.client.put(url, data=updated_incident)
