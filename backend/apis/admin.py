@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.urls import path, reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.db import IntegrityError
 
 from .models import Incident
 
@@ -15,7 +16,9 @@ class IncidentAdmin(admin.ModelAdmin):
         'datetime',
         'caseNumber',
         'description',
-        'location'
+        'location',
+        'latitude',
+        'longitude'
     )
 
     def get_urls(self):
@@ -39,14 +42,19 @@ class IncidentAdmin(admin.ModelAdmin):
             print(data[9].split(',')[2])
             for datum in data:
                 vals = datum.split(',')
+                try:
+                    Incident.objects.create(
+                        created = datetime.now(),
+                        datetime =  datetime.strptime(vals[0], '%m/%d/%Y %I:%M:%S %p'),
+                        caseNumber = vals[1],
+                        description = vals[2],
+                        location = vals[3],
+                        latitude = vals[4],
+                        longitude = vals[5]
+                    )
+                except IntegrityError:
+                    print('Duplicate Value.')
 
-                Incident.objects.create(
-                    created = datetime.now(),
-                    datetime =  datetime.strptime(vals[0], '%m/%d/%Y %I:%M:%S %p'),
-                    caseNumber = vals[1],
-                    description = vals[2],
-                    location = vals[3]
-                )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
 
