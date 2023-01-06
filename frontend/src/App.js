@@ -12,6 +12,7 @@ function App() {
   const {data, error} = useSwr(apiUrl, { fetcher });
 
   const incidents = data && !error ? data : [];
+  console.log(incidents)
 
   const [show, setShow] = useState(true);
 
@@ -34,9 +35,6 @@ function App() {
             <a href="https://www.madisonal.gov/1195/Madison-Police-Citizens-Advisory-Committ">Police Citizens Advisory Committee</a> representative to implement IT practices
             that allow for citizens to have fair and open access to this public data.
           </p>
-          <p>
-            {/* This data is from: 4/22/2022 to 4/28/2022. */}
-          </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -49,6 +47,22 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {incidents.map((incident) => (
+          <Marker
+            key = {incident.id}
+            position = {[
+              incident.latitude,
+              incident.longitude
+            ]}
+            >
+              <Popup>
+                <h5>{incident.location}</h5>
+                <p>{incident.caseNumber}</p>
+                <p>{new Date(incident.datetime).toLocaleDateString('en-US')} @ {new Date(incident.datetime).toLocaleTimeString('en-US')}</p>
+                <p>{incident.description}</p>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </>
   );
