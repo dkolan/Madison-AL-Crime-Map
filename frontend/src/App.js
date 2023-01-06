@@ -12,7 +12,6 @@ function App() {
   const {data, error} = useSwr(apiUrl, { fetcher });
 
   const incidents = data && !error ? data : [];
-  console.log(incidents)
 
   const [show, setShow] = useState(true);
 
