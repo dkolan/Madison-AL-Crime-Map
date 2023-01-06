@@ -10,5 +10,7 @@ class IncidentSerializer(serializers.ModelSerializer):
             'datetime',
             'caseNumber',
             'description',
-            'location'
+            'location',
+            'latitude',
+            'longitude'
         ]
