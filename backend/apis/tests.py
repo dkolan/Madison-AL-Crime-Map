@@ -1,18 +1,14 @@
-import csv
 from django.test import TestCase
-from django.test.client import Client
 from django.urls import reverse
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Incident
-from .admin import IncidentAdmin, CsvImportForm
+from .admin import IncidentAdmin
 
 from rest_framework.test import APIClient
 
 from datetime import datetime
-import os
 
 class IncidentTestCase(TestCase):
     def setUp(self):
