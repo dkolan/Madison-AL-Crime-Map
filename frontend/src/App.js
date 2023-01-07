@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import DatePicker from "react-datepicker";
 import useSwr from "swr";
+
 import './App.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 const fetcher = (...args) => fetch(...args).then(response => response.json());
 
@@ -12,10 +15,44 @@ function App() {
   const {data, error} = useSwr(apiUrl, { fetcher });
 
   const incidents = data && !error ? data : [];
+  const filteredIncidents = [];
 
   const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
+
+  const Picker = () => {
+    const [startDate, setStartDate] = useState(Date.now());
+    const [endDate, setEndDate] = useState(Date.now());
+
+    for (const i of incidents) {
+      const date = new Date(i.datetime);
+      if (startDate <= date && endDate >= date) {
+        filteredIncidents.push(i);
+      }
+    }
+    return (
+      <div class="date-picker-container">
+        <p class="date-picker-label">Start Date</p>
+        <DatePicker
+          selected={startDate}
+          onChange={(date) => setStartDate(date)}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+        />
+        <p class="date-picker-label">End Date</p>
+        <DatePicker
+          selected={endDate}
+          onChange={(date) => setEndDate(date)}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -41,28 +78,33 @@ function App() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <MapContainer center={[34.69926, -86.74833]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {incidents.map((incident) => (
-          <Marker
-            key = {incident.id}
-            position = {[
-              incident.latitude,
-              incident.longitude
-            ]}
-            >
-              <Popup>
-                <h5>{incident.location}</h5>
-                <p>{incident.caseNumber}</p>
-                <p>{new Date(incident.datetime).toLocaleDateString('en-US')} @ {new Date(incident.datetime).toLocaleTimeString('en-US')}</p>
-                <p>{incident.description}</p>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+      <div class="wrapper">
+        <div class="datepicker">
+          <Picker></Picker>
+        </div>
+        <MapContainer center={[34.69926, -86.74833]} zoom={13} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {incidents.map((incident) => (
+            <Marker
+              key = {incident.id}
+              position = {[
+                incident.latitude,
+                incident.longitude
+              ]}
+              >
+                <Popup>
+                  <h5>{incident.location}</h5>
+                  <p>{incident.caseNumber}</p>
+                  <p>{new Date(incident.datetime).toLocaleDateString('en-US')} @ {new Date(incident.datetime).toLocaleTimeString('en-US')}</p>
+                  <p>{incident.description}</p>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
     </>
   );
 }
