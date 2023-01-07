@@ -10,41 +10,57 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const fetcher = (...args) => fetch(...args).then(response => response.json());
 
+
 function App() {
   const apiUrl = "http://localhost:8000/api/incidents";
   const {data, error} = useSwr(apiUrl, { fetcher });
 
   const incidents = data && !error ? data : [];
-  const filteredIncidents = [];
-
+  const [filteredIncidents, setFilteredIncidents] = useState([]);
+  
   const [show, setShow] = useState(true);
-
+  
   const handleClose = () => setShow(false);
 
   const Picker = () => {
-    const [startDate, setStartDate] = useState(Date.now());
-    const [endDate, setEndDate] = useState(Date.now());
-
-    for (const i of incidents) {
-      const date = new Date(i.datetime);
-      if (startDate <= date && endDate >= date) {
-        filteredIncidents.push(i);
+    const [startDate, setStartDate] = useState(new Date("2022/12/01"));
+    const [endDate, setEndDate] = useState(new Date("2022/12/31"));
+  
+    const handleDateChange = () => {
+      const newFilteredIncidents = [];
+      for (const i of incidents) {
+        const date = new Date(i.datetime);
+        if (startDate <= date && endDate >= date) {
+          // console.log(`startDate: ${startDate}\ndate: ${date}\nendDate: ${endDate}`);
+          newFilteredIncidents.push(i);
+        }
       }
+      // console.log(newFilteredIncidents);
+      setFilteredIncidents(newFilteredIncidents);
     }
+  
     return (
-      <div class="date-picker-container">
-        <p class="date-picker-label">Start Date</p>
+      <div className="date-picker-container">
+        <p className="date-picker-label">Start Date</p>
         <DatePicker
           selected={startDate}
-          onChange={(date) => setStartDate(date)}
+          onChange={(date) => {
+            console.log(date);
+            setStartDate(date);
+            handleDateChange();
+          }}
           selectsStart
           startDate={startDate}
           endDate={endDate}
         />
-        <p class="date-picker-label">End Date</p>
+        <p className="date-picker-label">End Date</p>
         <DatePicker
           selected={endDate}
-          onChange={(date) => setEndDate(date)}
+          onChange={(date) => {
+            console.log(date);
+            setEndDate(date);
+            // handleDateChange();
+          }}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
@@ -78,16 +94,16 @@ function App() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div class="wrapper">
-        <div class="datepicker">
-          <Picker></Picker>
+      <div className="wrapper">
+        <div className="datepicker">
+          <Picker />
         </div>
         <MapContainer center={[34.69926, -86.74833]} zoom={13} scrollWheelZoom={false}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {incidents.map((incident) => (
+          {filteredIncidents.map((incident) => (
             <Marker
               key = {incident.id}
               position = {[
