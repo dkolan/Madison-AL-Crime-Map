@@ -14,4 +14,4 @@ The front-end is written in React, primarily utilzing Leaflet to render the map 
 5. Automate the parsing of PDF report from the city.
 
 # Demo
-![](https://github.com/dkolan/Madison-AL-Crime-Map/blob/FEAT-11_add_README/resources/crimemap.gif)
+![](https://github.com/dkolan/Madison-AL-Crime-Map/blob/main/resources/crimemap.gif)
