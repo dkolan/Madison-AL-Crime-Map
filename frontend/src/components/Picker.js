@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 
-const Picker = ({incidents, filteredIncidents, setFilteredIncidents}) => {
+const Picker = ({incidents, setFilteredIncidents}) => {
 	const fourWeeksAgo = 24192e5
 	const twoWeeksAgo = 12096e5
 	const [startDate, setStartDate] = useState(Date.now() - fourWeeksAgo);
 	const [endDate, setEndDate] = useState(Date.now() - twoWeeksAgo);
+
+	useEffect(() => {
+		handleDateChange();
+	}, []);
 
 	useEffect(() => {
 			handleDateChange();

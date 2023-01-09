@@ -19,10 +19,15 @@ function App() {
 
   // API Logic
   const apiUrl = "http://localhost:8000/api/incidents";
-  const {data, error} = useSwr(apiUrl, { fetcher });
+  // const {data, error} = useSwr(apiUrl, { fetcher });
+  const {data, error} = useSwr(apiUrl, async (url) => {
+    const response = await fetch(url);
+    return response.json();
+  }, { suspense: true });  
 
   // Incident Filtering state
   const incidents = data && !error ? data : [];
+  console.log(incidents)
   const [filteredIncidents, setFilteredIncidents] = useState([]);
 
   return (
@@ -35,7 +40,6 @@ function App() {
         <div className="datepicker">
           <Picker 
             incidents={incidents} 
-            filteredIncidents={filteredIncidents}
             setFilteredIncidents={setFilteredIncidents}
           />
         </div>
