@@ -3,7 +3,9 @@ This is another "sprint" project I put together during my Winter Break between m
 
 Because I would be working primarily in Python on my co-op team at Adtran, I decided to create a REST API using Django for the backend to store the crime incident data. Currently there is limited automation grabbing the PDFs from Madison, as they've recently changed the from a key:value format to a table format that does not play nice with Tabula and Pandas. Data is parsed using the Nominatim (OpenStreetMap) geocoding API with Google Maps as a paid fallback (primarily when addresses are only listed as cross-streets). Better automation involving downloading newly published files (Celery) and PDF parsing (Tabula or OCR) is planned for the future. Unit tests are written utilizing Django's built-in unit testing functionality.
 
-The front-end is written in React, primarily utilzing Leaflet to render the map and markers. Filtering by dates is accomplished by getting imput from React Date Picker.
+The front-end is written in React, primarily utilizing Leaflet to render the map and markers. Filtering by dates is accomplished by getting input from React Date Picker.
+
+I initially wanted to do this project prior to my first term at Adtran, in order to learn more about Docker. To that end, the project can be ran locally utilizing `docker compose`.
 
 # Todo
 0. Render one marker if incident details share the same Case Number and/or Location to prevent overlapping.
