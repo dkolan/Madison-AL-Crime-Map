@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 
+const isDateBetween = (minDate, maxDate, target) => {
+	minDate.setHours(0,0,0,0)
+	maxDate.setHours(0,0,0,0)
+	target.setHours(0,0,0,0)
+	return target.getTime() >= minDate.getTime() && target.getTime() <= maxDate.getTime();
+}
+
 const Picker = ({incidents, setFilteredIncidents}) => {
 	const fourWeeksAgo = 24192e5
 	const twoWeeksAgo = 12096e5
@@ -21,10 +28,7 @@ const Picker = ({incidents, setFilteredIncidents}) => {
 		const maxDate = new Date(endDate)
 		for (const i of incidents) {
 			const date = new Date(i.datetime);
-			if (minDate.toLocaleDateString() <= date.toLocaleDateString() 
-					&& maxDate.toLocaleDateString() >= date.toLocaleDateString()) {
-				newFilteredIncidents.push(i);
-			}
+			if (isDateBetween(minDate, maxDate, date)) newFilteredIncidents.push(i);
 		}
 		setFilteredIncidents(newFilteredIncidents);
 	}
