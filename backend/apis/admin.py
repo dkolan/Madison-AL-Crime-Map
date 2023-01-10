@@ -39,21 +39,41 @@ class IncidentAdmin(admin.ModelAdmin):
 
             headers = csv_data[0]
             data = csv_data[1:]
-            print(data[9].split(',')[2])
-            for datum in data:
-                vals = datum.split(',')
-                try:
-                    Incident.objects.create(
-                        created = datetime.now(),
-                        datetime =  datetime.strptime(vals[0], '%m/%d/%Y %I:%M:%S %p'),
-                        caseNumber = vals[1],
-                        description = vals[2],
-                        location = vals[3],
-                        latitude = vals[4],
-                        longitude = vals[5]
-                    )
-                except IntegrityError:
-                    print('Duplicate Value.')
+
+            try:
+                for datum in data:
+                    vals = datum.split(',')
+                    try:
+                        datetime_pattern = '%m/%d/%Y %I:%M:%S %p'
+                        dt = datetime.strptime(vals[0], datetime_pattern)
+                    except ValueError as ve:
+                        print(ve)
+                        print(f'{vals[0]} does not match datetime pattern: {datetime_pattern}')
+                    try:
+                        datetime_pattern = '%m/%d/%y %H:%M'
+                        dt = datetime.strptime(vals[0], '%m/%d/%y %H:%M')
+                    except ValueError as ve:
+                        print(ve)
+                        print(f'{vals[0]} does not match datetime pattern: {datetime_pattern}')
+                    try:
+                        Incident.objects.create(
+                            created = datetime.now(),
+                            datetime = dt,
+                            caseNumber = vals[1],
+                            description = vals[2],
+                            location = vals[3],
+                            latitude = vals[4],
+                            longitude = vals[5]
+                        )
+                    except IntegrityError as ie:
+                        print(ie)
+                        print(f'Duplicate Value.: {datum}')
+            except IndexError as index_e:
+                print(index_e)
+                if datum == '':
+                    print(f'Likely a newline at the end of the CSV.')
+                else:
+                    print(f'There is some other error in datum: {datum}')
 
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
